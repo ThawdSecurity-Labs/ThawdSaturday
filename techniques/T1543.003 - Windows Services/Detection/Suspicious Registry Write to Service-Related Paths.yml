@@ -1,0 +1,36 @@
+title: Suspicious Registry Write to Service-Related Paths
+id: e2084f78-be4e-4b42-ac12-3e9dfda0c097
+description: Detects registry writes to service-related paths from processes other than services.exe or lsass.exe, which could indicate malicious activity.
+status: experimental
+author: Thawd Labs
+date: 2024/08/23
+logsource:
+    category: registry_event
+    product: windows
+    service: sysmon
+detection:
+    selection:
+        EventID: 13
+        TargetObject|contains|all:
+            - '\SYSTEM\CurrentControlSet\Services\'
+    selection_registry_name:
+        TargetObject|endswith:
+            - '\ImagePath'
+            - '\parameters\servicedll'
+    filter:
+        Image|endswith:
+            - '\services.exe'
+            - '\lsass.exe'
+    condition: selection and selection_registry_name and not filter
+falsepositives:
+    - Legitimate software that modifies services registry keys for legitimate purposes
+    - svchost.exe with process id < 1200
+    - System administrators modifying service configurations
+level: high
+tags:
+    - attack.t1543.003
+    - attack.t1569.002
+    - attack.t1112
+    - attack.execution
+    - attack.persistence
+    - attack.defense_evasion

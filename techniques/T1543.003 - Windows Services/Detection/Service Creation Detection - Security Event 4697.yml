@@ -1,0 +1,31 @@
+title: Service Creation Detection - Security Event
+id: c0b6dbb4-c0d8-41de-9bbd-f7c41e205164
+description: Detects the creation of a new service from abnormal path using Security Event ID 4697, which could indicate malicious activity.
+status: experimental
+author: Thawd Labs
+date: 2024/08/23
+logsource:
+    product: windows
+    service: security
+    definition: The 'System Security Extension' audit subcategory need to be enabled to log the EID 4697
+detection:
+    selection:
+        EventID: 4697
+    filter_expected_location:
+        ServiceFileName|contains:
+            - ":windows\\system32\\"
+            - ":\\Program Files\\"
+            - ":\\Program Files (x86)\\"
+            - "\\%systemroot%\\"
+    condition: selection and not filter_expected_location
+falsepositives:
+    - Legitimate service installations or updates by authorized software
+    - System administrators creating services as part of maintenance
+level: high
+tags:
+    - attack.t1543.003
+    - attack.t1569.002
+    - attack.execution
+    - attack.persistence
+references:
+    - https://docs.microsoft.com/en-us/windows/security/threat-protection/auditing/event-4697

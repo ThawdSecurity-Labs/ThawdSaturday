@@ -1,0 +1,10 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Thawd_Registry]
+"DisplayName"="Thawd_Registry"
+"Description"="This is a custom service created by adding registry entries."
+"ImagePath"="\"C:\\Thawd.exe\""
+"Start"=dword:00000002
+"Type"=dword:00000010
+"ErrorControl"=dword:00000001
+

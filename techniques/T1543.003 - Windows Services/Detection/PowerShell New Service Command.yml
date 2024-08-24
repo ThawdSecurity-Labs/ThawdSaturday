@@ -1,0 +1,26 @@
+title: PowerShell New Service Command
+id: 29f3a8a4-cab4-46bc-9244-35b17597bd07
+description: Detects the creation of a new service via PowerShell, which may indicate malicious activity.
+status: experimental
+author: Thawd Labs
+date: 2024/08/24
+logsource:
+    product: windows
+    service: powershell
+    definition: script
+detection:
+    selection:
+        EventID: 4104
+        ScriptBlockText|contains:
+            - 'New-Service'
+    condition: selection
+falsepositives:
+    - Legitimate service creation by system administrators or authorized software
+    - Automated system tasks
+level: high
+tags:
+    - attack.execution
+    - attack.t1059.001
+    - attack.t1543.003
+references:
+    - https://www.sygnia.co/blog/ghost-emperor-demodex-rootkit/

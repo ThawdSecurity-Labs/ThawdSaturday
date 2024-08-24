@@ -1,0 +1,27 @@
+title: Suspicious Service Creation Using sc.exe - Sysmon
+id: bc04836f-e9b0-4ca5-af3c-fae6be710eff
+description: Detects the creation of a new service using sc.exe, which could be indicative of malicious activity, based on Sysmon logs.
+status: experimental
+author: Thawd Labs
+date: 2024/08/23
+logsource:
+    category: process_creation
+    product: windows
+    service: sysmon
+detection:
+    selection:
+        EventID: 1
+        Image|endswith: '\sc.exe'
+        CommandLine|contains: ' create '
+    condition: selection
+falsepositives:
+    - Legitimate software installations or updates
+    - System administrators using sc.exe for maintenance
+level: high
+tags:
+    - attack.t1543.003
+    - attack.t1569.002
+    - attack.execution
+    - attack.persistence
+references:
+    - https://news.sophos.com/en-us/2020/05/21/ragnar-locker-ransomware-deploys-virtual-machine-to-dodge-security/

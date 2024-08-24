@@ -1,0 +1,27 @@
+title: Suspicious Service Creation Using sc.exe - Windows Security
+id: fd8af1dd-058b-434b-838c-b71860ea4118
+description: Detects the creation of a new service using sc.exe, which could be indicative of malicious activity, based on Windows Security logs.
+status: experimental
+author: Thawd Labs
+date: 2024/08/23
+logsource:
+    category: process_creation
+    product: windows
+    service: security
+detection:
+    selection:
+        EventID: 4688
+        NewProcessName|endswith: '\sc.exe'
+        ProcessCommandLine|contains: ' create '
+    condition: selection
+falsepositives:
+    - Legitimate software installations or updates
+    - System administrators using sc.exe for maintenance
+level: high
+tags:
+    - attack.t1543.003
+    - attack.t1569.002
+    - attack.execution
+    - attack.persistence
+references:
+    - https://news.sophos.com/en-us/2020/05/21/ragnar-locker-ransomware-deploys-virtual-machine-to-dodge-security/
